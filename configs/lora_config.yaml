@@ -1,20 +1,21 @@
 # Hardware Optimized Training Configuration for RTX 4080 (16GB VRAM)
-model_name: "Qwen/Qwen2.5-4B-Instruct"  # Base student framework layer
+model_name_or_path: "Qwen/Qwen3.5-4B-Instruct"  # Fixed to actual Qwen3.5 framework
 output_dir: "./checkpoints/qwen3.5-4b-alif-xcot"
 
 # 🔬 PEFT DoRA Weight-Decomposition Parameters
-r: 128
-lora_alpha: 128
-target_modules: ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
-lora_dropout: 0.05
-bias: "none"
+finetuning_type: lora
 use_dora: true                # 🌟 FORCES HUGGING FACE PEFT TO ENGAGE DORA LAYERS
+lora_rank: 16                 # DoRA works best with conservative ranks (16 or 32)
+lora_alpha: 32                # Scaled at exactly 2x the Rank for standard stability
+lora_dropout: 0.05
+lora_target: all              # Captures all linear layers automatically in LLaMA-Factory
 
 # Memory Scaling Configuration Optimized for DoRA Overheads
-learning_rate: 2.0e-5
+learning_rate: 2.0e-4         # PERFECT FOR DORA: Needs 2x-3x higher LR than standard LoRA
 lr_scheduler_type: "cosine"
-per_device_train_batch_size: 1  # ⚠️ Kept at 1 to prevent Out-Of-Memory crashes with DoRA
-gradient_accumulation_steps: 8 # Increased to 8 to keep your math batch size identical
+warmup_ratio: 0.03            # Stabilizes directional weight adjustments early on
+per_device_train_batch_size: 1 
+gradient_accumulation_steps: 16 # Increased to 16 to maintain a stable effective batch size of 16
 num_train_epochs: 3
 weight_decay: 0.01
 bf16: true                    # Supported natively by your Ada Lovelace RTX 4080
@@ -23,4 +24,4 @@ fp16: false
 # Boundary Management
 gradient_checkpointing: true
 packing: false                # Disabled to preserve strict xCoT thought blocks
-max_seq_length: 4096
+cutoff_len: 4096              # Max sequence length parameter for framework
