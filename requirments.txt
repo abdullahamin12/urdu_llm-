@@ -1,0 +1,29 @@
+# Core ML Training Stack
+torch>=2.3.0
+torchvision>=0.18.0
+torchaudio>=2.3.0
+
+# Unsloth — 2x faster training for Qwen
+unsloth>=2024.8.0
+
+# HuggingFace Stack
+transformers>=4.44.0
+datasets>=2.20.0
+accelerate>=0.33.0
+peft>=0.12.0
+trl>=0.9.0
+
+# Quantization
+bitsandbytes>=0.43.0
+
+# Utilities
+numpy>=1.26.0
+pandas>=2.2.0
+tqdm>=4.66.0
+python-dotenv>=1.0.0
+
+# Monitoring
+wandb>=0.17.0
+
+# Data validation
+jsonlines>=4.0.0
