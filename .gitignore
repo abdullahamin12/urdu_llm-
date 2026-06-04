@@ -1,0 +1,19 @@
+# Block binary machine learning files
+data/
+*.json
+*.jsonl
+*.csv
+
+# Block model checkpoints and fine-tuned adapter weights
+checkpoints/
+outputs/
+*.safetensors
+*.pt
+
+# Block system caching loops and virtual environments
+.venv/
+__pycache__/
+*.pyc
+
+# Block key tokens or environment secrets
+.env
